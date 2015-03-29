@@ -1,12 +1,10 @@
-# Temperature-conversion program using PyQt
-
 import sys
-import os
+import shlex, subprocess
 from PyQt4 import QtCore, QtGui, uic
 
 form_class = uic.loadUiType("main.ui")[0]                 # Load the UI
 
-class MyWindowClass(QtGui.QMainWindow, form_class):
+class MainWindow(QtGui.QMainWindow, form_class):
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         self.setupUi(self)
@@ -16,11 +14,13 @@ class MyWindowClass(QtGui.QMainWindow, form_class):
         print "exec"
         if self.rB1.toggled:
             print "rB1 checked"
+            res = subprocess.check_output(["ipconfig"])
+            print res
         elif self.rB2.toggled:
             print "rB2 checked"
 
-
-app = QtGui.QApplication(sys.argv)
-myWindow = MyWindowClass(None)
-myWindow.show()
-app.exec_()
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    mainWindow = MainWindow(None)
+    mainWindow.show()
+    app.exec_()
