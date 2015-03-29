@@ -107,6 +107,10 @@
   <property name="windowTitle">
    <string>FEZoneVPN 連接器</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>favicon.ico</normaloff>favicon.ico</iconset>
+  </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>

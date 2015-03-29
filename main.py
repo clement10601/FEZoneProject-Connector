@@ -7,12 +7,20 @@ from PyQt4 import Qt, QtCore, QtGui, uic
 import ctypes
 
 form_class = uic.loadUiType("main.ui")[0]                 # Load the UI
+startupinfo = subprocess.STARTUPINFO()
+startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+startupinfo.wShowWindow = subprocess.SW_HIDE
 
 class MainWindow(QtGui.QMainWindow, form_class):
     vpnserverip = "192.168.240"
     netmask = "255.255.255.0"
     gameServ = ["157.7.172.0","157.7.173.0","157.7.174.0"]
-    res = subprocess.check_output(["ipconfig","/all"])
+    if os.name == 'nt':
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = subprocess.SW_HIDE
+    res = subprocess.check_output(["ipconfig","/all"], shell=False, startupinfo=startupinfo)
+
     def __init__(self, parent=None):
         QtGui.QMainWindow.__init__(self, parent)
         #self.setWindowFlags(Qt.Qt.FramelessWindowHint)
@@ -35,9 +43,7 @@ class MainWindow(QtGui.QMainWindow, form_class):
         self.pte.insertPlainText("[Check]作業系統為: %s\n\n".decode('utf8')%(osver))
 
     def execBtn_clicked(self):
-            print self.rB1.isChecked()
-            print self.rB2.isChecked()
-            self.res = subprocess.check_output(["ipconfig","/all"])
+            self.res = subprocess.check_output(["ipconfig","/all"], shell=False, startupinfo=self.startupinfo)
             if self.rB1.isChecked():
                 if self.VPNconnected():
                     self.pte.insertPlainText("[Check]VPN已連線!\n".decode('utf8'))
@@ -72,13 +78,17 @@ class MainWindow(QtGui.QMainWindow, form_class):
         self.pte.insertPlainText("正在建立FEZ網路設定...\n".decode('utf8'))
         servip = self.findVPNserv()
         for gameservip in self.gameServ:
-            subprocess.check_call("route add %s mask %s %s"%(gameservip,self.netmask,servip))
+            subprocess.check_call("route add %s mask %s %s"%(gameservip,self.netmask,servip),
+                                  shell=False,
+                                  startupinfo=self.startupinfo)
         return True
 
     def clearRoute(self):
         self.pte.insertPlainText("正在初始化FEZ網路設定...\n".decode('utf8'))
         for gameservip in self.gameServ:
-            subprocess.check_call("route delete %s"%(gameservip))
+            subprocess.check_call("route delete %s"%(gameservip),
+                                  shell=False,
+                                  startupinfo=self.startupinfo)
         return True
 
     def findVPNserv(self):
@@ -90,6 +100,11 @@ class MainWindow(QtGui.QMainWindow, form_class):
 
 
 if __name__ == '__main__':
+    if os.name == 'nt':
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = subprocess.SW_HIDE
+
     app = QtGui.QApplication(sys.argv)
     mainWindow = MainWindow(None)
     mainWindow.show()
