@@ -4,7 +4,7 @@ import sys
 import os
 from PyQt4 import QtCore, QtGui, uic
 
-form_class = uic.loadUiType("untitled.ui")[0]                 # Load the UI
+form_class = uic.loadUiType("main.ui")[0]                 # Load the UI
 
 class MyWindowClass(QtGui.QMainWindow, form_class):
     def __init__(self, parent=None):
