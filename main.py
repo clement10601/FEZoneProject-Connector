@@ -13,8 +13,8 @@ startupinfo.wShowWindow = subprocess.SW_HIDE
 
 class MainWindow(QtGui.QMainWindow, form_class):
     vpnserverip = "192.168.240"
-    netmask = "255.255.255.0"
-    gameServ = ["157.7.172.0","157.7.173.0","157.7.174.0"]
+    netmask = "255.255.0.0"
+    gameServ = ["157.7.0.0","203.141.0.0","122.129.0.0","59.128.0.0","119.235.0.0"]
     if os.name == 'nt':
         startupinfo = subprocess.STARTUPINFO()
         startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
